@@ -13,35 +13,53 @@ def rotation(img, degree):
     dst = cv2.warpAffine(img_array,M,(cols,rows))
     st.image(dst)
 
-def translation(img):
-    #translation function
-    #to be completed
+def translation(img,x,y):
     image = Image.open(img)
     img_array = np.array(image)    
     rows,cols, temp = img_array.shape
+    M = np.float32([[1,0,x],[0,1,-y]])
+    dst = cv2.warpAffine(img_array,M,(cols,rows))
+    st.image(dst)
 
 def blurring(img):
-    #blurring function
-    #to be completed
     image = Image.open(img)
     img_array = np.array(image)    
     rows,cols, temp = img_array.shape
+    Blurred=cv2.blur(img_array,(BlurAmount,BlurAmount))
+    st.image(Blurred)
 
-def brightness(img):
-    #function to increase/decrease the brightness of the image
-    #to be completed
+def brightness(img,BrightnessValue):
     image = Image.open(img)
     img_array = np.array(image)    
     rows,cols, temp = img_array.shape
+    new_image = np.zeros(img_array.shape, img_array.dtype)
+    if(-1<=BrightnessValue<=1):
+        for y in range(img_array.shape[0]):
+            for x in range(img_array.shape[1]):
+                for c in range(img_array.shape[2]):
+                    new_image[y,x,c] = np.clip(img_array[y,x,c] + BrightnessValue*255, 0, 255)
+        st.image(new_image)
+    else:
+        print("enter value between -1 and 1")
+                    
 
-
-def zoom(img):
-    #function to zoom in/out the image with limit.
-    #to be completed
+def zoom(img,x1,x2,y1,y2):
     image = Image.open(img)
     img_array = np.array(image)    
     rows,cols, temp = img_array.shape
+    if(0<=x1<=np.shape(img_array)[0] and 0<=x2<=np.shape(img_array)[0] and 0<=y1<=np.shape(img_array)[1] and 0<=y2<=np.shape(img_array)[1]):
+        crop = img_array[y1:y2,x1:x2]
+        res = cv2.resize(crop,(28,28), interpolation = cv2.INTER_CUBIC)
+        st.image(res)
+    else:
+        print("enter x value less than {} and y value leass than {}".format(np.shape(img)[0],np.shape(img)[1]))
 
+def flip(img):
+    image = Image.open(img)
+    img_array = np.array(image)    
+    rows,cols, temp = img_array.shape
+    flip=cv2.flip(img_array,1)
+    st.image(flip)
 
 st.title('Inter IIT Tech Meet 2021')
 

@@ -69,6 +69,10 @@ def flip(img):
     flip=cv2.flip(img_array,1)
     st.image(flip)
 
+st.sidebar.header("Image Augmentation Options")
+#st.sidebar.subheader("Ishan Prayagi")
+#st.sidebar.subheader("Reuben Devanesan")
+
 st.title('Inter IIT Tech Meet 2021')
 
 st.subheader("Upload images")
@@ -105,9 +109,12 @@ if(blurrer):
     for uploaded_file in uploaded_files:
         blurring(uploaded_file, blur)
 
+col1,col2 = st.beta_columns(2)
 st.subheader("Translate Images")
-x = st.number_input("x direction", format = "%d", value = 1)
-y = st.number_input("y direction", format = "%d", value = 1)
+with col1:
+    x = st.number_input("x direction", format = "%d", value = 1)
+with col2:
+    y = st.number_input("y direction", format = "%d", value = 1)
 translater = st.button('Translate')
 if(translater):
     for uploaded_file in uploaded_files:

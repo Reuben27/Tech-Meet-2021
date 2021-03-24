@@ -21,14 +21,15 @@ def translation(img,x,y):
     dst = cv2.warpAffine(img_array,M,(cols,rows))
     st.image(dst)
 
-def blurring(img):
+def blurring(img, BlurAmount):
     image = Image.open(img)
     img_array = np.array(image)    
     rows,cols, temp = img_array.shape
-    Blurred=cv2.blur(img_array,(BlurAmount,BlurAmount))
+    Blurred = cv2.blur(img_array,(BlurAmount,BlurAmount))
     st.image(Blurred)
 
 def brightness(img,BrightnessValue):
+    # Taking a lot of time
     image = Image.open(img)
     img_array = np.array(image)    
     rows,cols, temp = img_array.shape
@@ -42,8 +43,15 @@ def brightness(img,BrightnessValue):
     else:
         print("enter value between -1 and 1")
                     
-
 def zoom(img,x1,x2,y1,y2):
+    # error: OpenCV(4.3.0) C:\projects\opencv-python\opencv\modules\imgproc\src\resize.cpp:3929: error: (-215:Assertion failed) !ssize.empty() in function 'cv::resize'
+    # Traceback:
+    # File "c:\users\reube\appdata\local\programs\python\python38\lib\site-packages\streamlit\script_runner.py", line 333, in _run_script
+    #     exec(code, module.__dict__)
+    # File "D:\01 - Projects\Machine Learning\Tech-Meet-2021\Streamlit\app.py", line 93, in <module>
+    #     zoom(uploaded_file,x1,x2,y1,y2)
+    # File "D:\01 - Projects\Machine Learning\Tech-Meet-2021\Streamlit\app.py", line 51, in zoom
+    res = cv2.resize(crop,(28,28), interpolation = cv2.INTER_CUBIC)
     image = Image.open(img)
     img_array = np.array(image)    
     rows,cols, temp = img_array.shape
@@ -63,12 +71,55 @@ def flip(img):
 
 st.title('Inter IIT Tech Meet 2021')
 
-uploaded_files = st.file_uploader("Upload images", accept_multiple_files = True)
+st.subheader("Upload images")
+uploaded_files = st.file_uploader("", accept_multiple_files = True)
+
+st.subheader("Training/Testing")
 percent_testing = st.slider('Select % of images for training', 0, 100, step=25)
 
+st.subheader("Rotate Images")
 rotating_degree = st.slider('Select rotation degree', -45, 45, step=1, value=0)
 rotater = st.button('Rotate')
+
 if(rotater):
     for uploaded_file in uploaded_files:
         rotation(uploaded_file, rotating_degree)
-    
+
+st.subheader("Flip Images")
+flipper = st.button('Flip')
+if(flipper):
+    for uploaded_file in uploaded_files:
+        flip(uploaded_file)
+
+st.subheader("Brighten Images")
+bright = st.number_input("Enter brightness amount")
+brighten = st.button('Brighten')
+if(brighten):
+    for uploaded_file in uploaded_files:
+        brightness(uploaded_file, bright)
+
+st.subheader("Blur Images")
+blur = st.number_input("Enter blurring amount", format = "%d", value = 1)
+blurrer = st.button('Blur')
+if(blurrer):
+    for uploaded_file in uploaded_files:
+        blurring(uploaded_file, blur)
+
+st.subheader("Translate Images")
+x = st.number_input("x direction", format = "%d", value = 1)
+y = st.number_input("y direction", format = "%d", value = 1)
+translater = st.button('Translate')
+if(translater):
+    for uploaded_file in uploaded_files:
+        translation(uploaded_file, x, y)
+
+#col1,col2,col3,col4 = st.beta_columns(4)
+# x1 = st.number_input("Enter x1", format = "%d", value = 1)
+# x2 = st.number_input("Enter x2", format = "%d", value = 1)
+# y1 = st.number_input("Enter y1", format = "%d", value = 1)
+# y2 = st.number_input("Enter y2", format = "%d", value = 1)
+# zoomer = st.button('Zoom')
+
+# if(zoomer):
+#     for uploaded_file in uploaded_files:
+#         zoom(uploaded_file,x1,x2,y1,y2)

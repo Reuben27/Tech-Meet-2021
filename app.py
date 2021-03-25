@@ -104,7 +104,7 @@ def all_changes(img_array,degree,x,y,BlurAmount,x1,y1,x2,y2,isFlipped):
             img_array = res
 
     #Flip
-    if (isFlipped):
+    if (isFlipped == True):
         rows,cols, temp = img_array.shape
         img_array=cv2.flip(img_array,1)
 
@@ -152,9 +152,9 @@ st.subheader("Flip Images")
 flipper = st.button('Flip')
 if(flipper):
     if (isFlipped == False):
-        isFlipped == True
+        isFlipped = True
     else:
-        isFlipped == False
+        isFlipped = False
     #for uploaded_file in uploaded_files:
     flip(original_img_array)
 

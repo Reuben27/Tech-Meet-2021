@@ -5,25 +5,24 @@ import matplotlib.pyplot as plt
 import cv2 as cv2 
 from PIL import Image, ImageEnhance
 
-def rotation(degree):
-    #image = Image.open(img)
-        
+def rotation(image, degree):
+    #image = Image.open(img)    
     rows,cols, temp = img_array.shape
     M = cv2.getRotationMatrix2D((cols/2,rows/2),degree,1)
     dst = cv2.warpAffine(img_array,M,(cols,rows))
     st.image(dst)
 
-def translation(x,y):
+def translation(image,x,y):
     #image = Image.open(img)
-    #img_array = np.array(image)    
+    img_array = np.array(image)    
     rows,cols, temp = img_array.shape
     M = np.float32([[1,0,x],[0,1,-y]])
     dst = cv2.warpAffine(img_array,M,(cols,rows))
     st.image(dst)
 
-def blurring(BlurAmount):
+def blurring(image,BlurAmount):
     #image = Image.open(img)
-    #img_array = np.array(image)    
+    img_array = np.array(image)    
     rows,cols, temp = img_array.shape
     Blurred = cv2.blur(img_array,(BlurAmount,BlurAmount))
     st.image(Blurred)
@@ -50,7 +49,7 @@ def brighter(image,factor):
 
 
 
-def zoom(x1,x2,y1,y2):
+def zoom(image,x1,x2,y1,y2):
     # error: OpenCV(4.3.0) C:\projects\opencv-python\opencv\modules\imgproc\src\resize.cpp:3929: error: (-215:Assertion failed) !ssize.empty() in function 'cv::resize'
     # Traceback:
     # File "c:\users\reube\appdata\local\programs\python\python38\lib\site-packages\streamlit\script_runner.py", line 333, in _run_script
@@ -60,7 +59,7 @@ def zoom(x1,x2,y1,y2):
     # File "D:\01 - Projects\Machine Learning\Tech-Meet-2021\Streamlit\app.py", line 51, in zoom
     res = cv2.resize(crop,(28,28), interpolation = cv2.INTER_CUBIC)
     #image = Image.open(img)
-    #img_array = np.array(image)    
+    img_array = np.array(image)    
     rows,cols, temp = img_array.shape
     if(0<=x1<=np.shape(img_array)[0] and 0<=x2<=np.shape(img_array)[0] and 0<=y1<=np.shape(img_array)[1] and 0<=y2<=np.shape(img_array)[1]):
         crop = img_array[y1:y2,x1:x2]
@@ -69,12 +68,57 @@ def zoom(x1,x2,y1,y2):
     else:
         print("enter x value less than {} and y value leass than {}".format(np.shape(img)[0],np.shape(img)[1]))
 
-def flip():
+def flip(image):
     #image = Image.open(img)
-    #img_array = np.array(image)    
+    isFlipped = not isFlipped
+    img_array = np.array(image)    
     rows,cols, temp = img_array.shape
     flip=cv2.flip(img_array,1)
     st.image(flip)
+
+def all_changes(img_array,degree,x,y,BlurAmount,x1,y1,x2,y2,isFlipped):
+    rows,cols, temp = img_array.shape
+
+    if (degree != NULL):
+        rows,cols, temp = img_array.shape
+        #Rotation
+        M = cv2.getRotationMatrix2D((cols/2,rows/2),degree,1)
+        img_array = cv2.warpAffine(img_array,M,(cols,rows))
+
+    if (x != NULL and y != NULL):
+        rows,cols, temp = img_array.shape
+        #Translation
+        M = np.float32([[1,0,x],[0,1,-y]])
+        img_array = cv2.warpAffine(img_array,M,(cols,rows))
+
+    #Blurred
+    if (BlurAmount != NULL):
+        img_array = cv2.blur(img_array,(BlurAmount,BlurAmount))
+
+    #Zoom
+    if (x1 != NULL and y1 != NULL and x2 != NULL and y2 != NULL):
+        res = cv2.resize(crop,(28,28), interpolation = cv2.INTER_CUBIC)
+        rows,cols, temp = img_array.shape
+        if(0<=x1<=np.shape(img_array)[0] and 0<=x2<=np.shape(img_array)[0] and 0<=y1<=np.shape(img_array)[1] and 0<=y2<=np.shape(img_array)[1]):
+            crop = img_array[y1:y2,x1:x2]
+            res = cv2.resize(crop,(28,28), interpolation = cv2.INTER_CUBIC)
+            img_array = res
+
+    #Flip
+    if (isFlipped):
+        rows,cols, temp = img_array.shape
+        img_array=cv2.flip(img_array,1)
+
+    st.image(img_array)
+
+
+
+uploaded_file=Image.open("A.png")
+original_img_array = np.array(uploaded_file)
+st.image(original_img_array)
+modified_img_array = np.array(uploaded_file)
+all_changes(modified_img_array,rotating_degree,x,y,blur,x1,y1,x2,y2,isFlipped)
+isFlipped = False
 
 st.sidebar.header("Image Augmentation Options")
 #st.sidebar.subheader("Ishan Prayagi")
@@ -84,8 +128,6 @@ st.title('Inter IIT Tech Meet 2021')
 
 st.subheader("Upload images")
 #uploaded_files = st.file_uploader("", accept_multiple_files = False)
-uploaded_file=Image.open("A.png")
-img_array = np.array(uploaded_file)
 
 st.subheader("Training/Testing")
 percent_testing = st.slider('Select % of images for training', 0, 100, step=25)
@@ -96,26 +138,26 @@ rotater = st.button('Rotate')
 
 if(rotater):
     #for uploaded_file in uploaded_files:
-    rotation(rotating_degree)
+    rotation(original_img_array,rotating_degree)
 
 st.subheader("Flip Images")
 flipper = st.button('Flip')
 if(flipper):
     #for uploaded_file in uploaded_files:
-    flip()
+    flip(original_img_array)
 
 st.subheader("Brighten Images")
 bright = st.number_input("Enter brightness amount")
 brighten = st.button('Brighten')
 if(brighten):
-    brighter(bright)
+    brighter(uploaded_file,bright)
 
 st.subheader("Blur Images")
 blur = st.number_input("Enter blurring amount", format = "%d", value = 1)
 blurrer = st.button('Blur')
 if(blurrer):
     #for uploaded_file in uploaded_files:
-    blurring(blur)
+    blurring(original_img_array,blur)
 
 col1,col2 = st.beta_columns(2)
 st.subheader("Translate Images")
@@ -126,7 +168,7 @@ with col2:
 translater = st.button('Translate')
 if(translater):
     #for uploaded_file in uploaded_files:
-    translation(x, y)
+    translation(original_img_array,x, y)
 
 
 

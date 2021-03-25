@@ -117,6 +117,7 @@ uploaded_file=Image.open("A.png")
 original_img_array = np.array(uploaded_file)
 st.image(original_img_array)
 modified_img_array = np.array(uploaded_file)
+rotating_degree, x, y, blur, x1, y1, x2, y2 = None 
 all_changes(modified_img_array,rotating_degree,x,y,blur,x1,y1,x2,y2,isFlipped)
 isFlipped = False
 

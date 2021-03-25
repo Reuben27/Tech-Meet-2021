@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 import cv2 as cv2 
 from PIL import Image, ImageEnhance
 
-isFlipped = False
-
 def rotation(img_array, degree):
     #image = Image.open(img)    
     rows,cols, temp = img_array.shape
@@ -72,8 +70,6 @@ def zoom(img_array,x1,x2,y1,y2):
 
 def flip(img_array):
     #image = Image.open(img)
-    global isFlipped
-    isFlipped = not isFlipped
     #img_array = np.array(image)    
     rows,cols, temp = img_array.shape
     flip=cv2.flip(img_array,1)
@@ -127,8 +123,8 @@ blur= None
 x1= None 
 y1= None 
 x2= None
-
-y2 = None 
+y2 = None
+isFlipped = False 
 
 
 
@@ -155,6 +151,10 @@ if(rotater):
 st.subheader("Flip Images")
 flipper = st.button('Flip')
 if(flipper):
+    if (isFlipped == False):
+        isFlipped == True
+    else:
+        isFlipped == False
     #for uploaded_file in uploaded_files:
     flip(original_img_array)
 

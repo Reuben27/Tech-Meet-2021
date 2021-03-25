@@ -79,24 +79,24 @@ def flip(image):
 def all_changes(img_array,degree,x,y,BlurAmount,x1,y1,x2,y2,isFlipped):
     rows,cols, temp = img_array.shape
 
-    if (degree != NULL):
+    if (degree != None):
         rows,cols, temp = img_array.shape
         #Rotation
         M = cv2.getRotationMatrix2D((cols/2,rows/2),degree,1)
         img_array = cv2.warpAffine(img_array,M,(cols,rows))
 
-    if (x != NULL and y != NULL):
+    if (x != None and y != None):
         rows,cols, temp = img_array.shape
         #Translation
         M = np.float32([[1,0,x],[0,1,-y]])
         img_array = cv2.warpAffine(img_array,M,(cols,rows))
 
     #Blurred
-    if (BlurAmount != NULL):
+    if (BlurAmount != None):
         img_array = cv2.blur(img_array,(BlurAmount,BlurAmount))
 
     #Zoom
-    if (x1 != NULL and y1 != NULL and x2 != NULL and y2 != NULL):
+    if (x1 != None and y1 != None and x2 != None and y2 != None):
         res = cv2.resize(crop,(28,28), interpolation = cv2.INTER_CUBIC)
         rows,cols, temp = img_array.shape
         if(0<=x1<=np.shape(img_array)[0] and 0<=x2<=np.shape(img_array)[0] and 0<=y1<=np.shape(img_array)[1] and 0<=y2<=np.shape(img_array)[1]):

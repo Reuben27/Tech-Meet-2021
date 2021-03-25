@@ -89,7 +89,7 @@ y_direction = None
 blur = None 
 
 st.sidebar.title("Bosch Traffic Sign Recognition")
-st.sidebar.subheader("With the advancements in AI and the development of computing capabilities in the 21st century, millions of processes around the globe are being automated like never before. The automobile industry is transforming,")
+#st.sidebar.subheader("With the advancements in AI and the development of computing capabilities in the 21st century, millions of processes around the globe are being automated like never before. The automobile industry is transforming,")
 
 #uploaded_file = Image.open("iitgnlogo.png")
 #original_img_array = np.array(uploaded_file)

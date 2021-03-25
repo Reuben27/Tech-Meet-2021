@@ -75,7 +75,7 @@ def flip(img_array):
     flip=cv2.flip(img_array,1)
     st.image(flip)
 
-def all_changes(img_array,degree,x,y,BlurAmount,x1,y1,x2,y2,isFlipped):
+def all_changes(img_array,degree,x,y,BlurAmount,x1,y1,x2,y2,genre):
     rows,cols, temp = img_array.shape
 
     if (degree != None):
@@ -104,7 +104,7 @@ def all_changes(img_array,degree,x,y,BlurAmount,x1,y1,x2,y2,isFlipped):
             img_array = res
 
     #Flip
-    if (isFlipped == True):
+    if (genre == "Yes"):
         rows,cols, temp = img_array.shape
         img_array=cv2.flip(img_array,1)
 
@@ -112,7 +112,7 @@ def all_changes(img_array,degree,x,y,BlurAmount,x1,y1,x2,y2,isFlipped):
 
 
 
-uploaded_file=Image.open("A.png")
+uploaded_file=Image.open("meteor.png")
 original_img_array = np.array(uploaded_file)
 st.image(original_img_array)
 modified_img_array = np.array(uploaded_file)
@@ -124,9 +124,6 @@ x1= None
 y1= None 
 x2= None
 y2 = None
-isFlipped = False 
-
-
 
 st.sidebar.header("Image Augmentation Options")
 #st.sidebar.subheader("Ishan Prayagi")
@@ -149,15 +146,10 @@ if(rotater):
     rotation(original_img_array,rotating_degree)
 
 st.subheader("Flip Images")
-flipper = st.button('Flip')
-if(flipper):
-    if (isFlipped == False):
-        isFlipped = True
-    else:
-        isFlipped = False
+genre = st.radio("Want to flip the images?", ('Yes', 'No'), 1)
+if(genre == "Yes"):
     #for uploaded_file in uploaded_files:
     flip(original_img_array)
-
 st.subheader("Brighten Images")
 bright = st.number_input("Enter brightness amount")
 brighten = st.button('Brighten')
@@ -196,4 +188,4 @@ if(translater):
 #         zoom(uploaded_file,x1,x2,y1,y2)
 Final_Image=st.button("Final Image")
 if Final_Image:
-    all_changes(modified_img_array,rotating_degree,x,y,blur,x1,y1,x2,y2,isFlipped)
+    all_changes(modified_img_array,rotating_degree,x,y,blur,x1,y1,x2,y2,genre)

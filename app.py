@@ -42,10 +42,17 @@ def blurring(img_array,BlurAmount):
 #     else:
 #         print("enter value between -1 and 1")
 
-def brighter(image,factor):
-    enhancer = ImageEnhance.Brightness(image)
-    im_output = enhancer.enhance(factor)
-    st.image(im_output)
+def brighter(img,factor):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    h, s, v = cv2.split(hsv)
+    v = cv2.add(v,factor)
+    v[v > 255] = 255
+    v[v < 0] = 0
+    final_hsv = cv2.merge((h, s, v))
+    img = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
+    #enhancer = ImageEnhance.Brightness(image)
+    #im_output = enhancer.enhance(factor)
+    st.image(img)
 
 
 
@@ -75,7 +82,7 @@ def flip(img_array):
     flip=cv2.flip(img_array,1)
     st.image(flip)
 
-def all_changes(img_array,degree,x,y,BlurAmount,x1,y1,x2,y2,genre):
+def all_changes(img_array,degree,x,y,brighter,BlurAmount,x1,y1,x2,y2,genre):
     rows,cols, temp = img_array.shape
 
     if (degree != None):
@@ -89,6 +96,16 @@ def all_changes(img_array,degree,x,y,BlurAmount,x1,y1,x2,y2,genre):
         #Translation
         M = np.float32([[1,0,x],[0,1,-y]])
         img_array = cv2.warpAffine(img_array,M,(cols,rows))
+
+    #Brightness
+    if (brighter != None):
+        hsv = cv2.cvtColor(img_array, cv2.COLOR_BGR2HSV)
+        h, s, v = cv2.split(hsv)
+        v = cv2.add(v,brighter)
+        v[v > 255] = 255
+        v[v < 0] = 0
+        final_hsv = cv2.merge((h, s, v))
+        img_array = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
 
     #Blurred
     if (BlurAmount != None):
@@ -151,10 +168,10 @@ if(genre == "Yes"):
     #for uploaded_file in uploaded_files:
     flip(original_img_array)
 st.subheader("Brighten Images")
-bright = st.number_input("Enter brightness amount")
+bright = st.number_input("Enter brightness amount", format = "%d", value = 0)
 brighten = st.button('Brighten')
 if(brighten):
-    brighter(uploaded_file,bright)
+    brighter(original_img_array,bright)
 
 st.subheader("Blur Images")
 blur = st.number_input("Enter blurring amount", format = "%d", value = 1)
@@ -188,4 +205,4 @@ if(translater):
 #         zoom(uploaded_file,x1,x2,y1,y2)
 Final_Image=st.button("Final Image")
 if Final_Image:
-    all_changes(modified_img_array,rotating_degree,x,y,blur,x1,y1,x2,y2,genre)
+    all_changes(modified_img_array,rotating_degree,x,y,bright,blur,x1,y1,x2,y2,genre)

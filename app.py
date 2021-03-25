@@ -129,7 +129,7 @@ def all_changes(img_array,degree,x,y,brighter,BlurAmount,x1,y1,x2,y2,genre):
 
 
 
-uploaded_file=Image.open("A1.png")
+uploaded_file=Image.open("meteor.png")
 original_img_array = np.array(uploaded_file)
 st.image(original_img_array)
 modified_img_array = np.array(uploaded_file)

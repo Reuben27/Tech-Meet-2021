@@ -12,7 +12,7 @@ def rotation(img_array, degree):
 
 def translation(img_array,x,y):   
     rows, cols, temp = img_array.shape
-    M = np.float32([[1,0,x],[0,1,-y]])
+    M = np.float32([[1,0,x*img_array.shape[0]],[0,1,-y*img_array.shape[1]]])
     dst = cv2.warpAffine(img_array,M,(cols,rows))
     st.image(dst)
 
@@ -22,6 +22,8 @@ def blurring(img_array,BlurAmount):
     st.image(Blurred)
 
 def brighter(img,factor):
+    if(factor <= 100):
+        factor = factor - 100
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     h, s, v = cv2.split(hsv)
     v = cv2.add(v,factor)
@@ -49,11 +51,13 @@ def all_changes(img_array, degree, x, y, brighter, BlurAmount, genre):
     #Translation
     if (x != None and y != None):
         rows, cols, temp = img_array.shape
-        M = np.float32([[1,0,x],[0,1,-y]])
+        M = np.float32([[1,0,x*img_array.shape[0]],[0,1,-y*img_array.shape[1]]])
         img_array = cv2.warpAffine(img_array,M,(cols,rows))
 
     #Brightness
     if (brighter != None):
+        if(brighter <= 100):
+            brighter = brighter - 100
         hsv = cv2.cvtColor(img_array, cv2.COLOR_BGR2HSV)
         h, s, v = cv2.split(hsv)
         v = cv2.add(v,brighter)
@@ -75,7 +79,7 @@ def all_changes(img_array, degree, x, y, brighter, BlurAmount, genre):
 
 ###### Image Augmentation Options ######
 
-preview_image = Image.open("meteor.png")
+preview_image = Image.open("A.png")
 original_img_array = np.array(preview_image)
 #st.image(original_img_array)
 modified_img_array = np.array(preview_image)
@@ -116,10 +120,16 @@ with col_y:
 Augment_Image = st.button("Augment Image")
 
 if Augment_Image:
-    st.write(training_percent)
-    st.write(rotating_degree)
-    st.write(flip_or_not)
-    st.write(brightness_factor)
-    st.write(x_direction)
-    st.write(y_direction)
-    all_changes(modified_img_array, rotating_degree, x_direction, y_direction, brightness_factor, blur, flip_or_not)
+    # st.write(training_percent)
+    # st.write(rotating_degree)
+    # st.write(flip_or_not)
+    # st.write(brightness_factor)
+    # st.write(x_direction)
+    # st.write(y_direction)
+    col_1, col_2 = st.beta_columns(2)
+    with col_1:
+        st.subheader("Original Image")  
+        st.image(original_img_array)
+    with col_2: 
+        st.subheader("Augmentated Image")
+        all_changes(modified_img_array, rotating_degree, x_direction, y_direction, int(brightness_factor*100), blur, flip_or_not)

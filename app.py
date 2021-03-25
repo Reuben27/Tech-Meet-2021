@@ -5,24 +5,26 @@ import matplotlib.pyplot as plt
 import cv2 as cv2 
 from PIL import Image, ImageEnhance
 
-def rotation(image, degree):
+isFlipped = False
+
+def rotation(img_array, degree):
     #image = Image.open(img)    
     rows,cols, temp = img_array.shape
     M = cv2.getRotationMatrix2D((cols/2,rows/2),degree,1)
     dst = cv2.warpAffine(img_array,M,(cols,rows))
     st.image(dst)
 
-def translation(image,x,y):
+def translation(img_array,x,y):
     #image = Image.open(img)
-    img_array = np.array(image)    
+    #img_array = np.array(image)    
     rows,cols, temp = img_array.shape
     M = np.float32([[1,0,x],[0,1,-y]])
     dst = cv2.warpAffine(img_array,M,(cols,rows))
     st.image(dst)
 
-def blurring(image,BlurAmount):
+def blurring(img_array,BlurAmount):
     #image = Image.open(img)
-    img_array = np.array(image)    
+    #img_array = np.array(image)    
     rows,cols, temp = img_array.shape
     Blurred = cv2.blur(img_array,(BlurAmount,BlurAmount))
     st.image(Blurred)
@@ -49,7 +51,7 @@ def brighter(image,factor):
 
 
 
-def zoom(image,x1,x2,y1,y2):
+def zoom(img_array,x1,x2,y1,y2):
     # error: OpenCV(4.3.0) C:\projects\opencv-python\opencv\modules\imgproc\src\resize.cpp:3929: error: (-215:Assertion failed) !ssize.empty() in function 'cv::resize'
     # Traceback:
     # File "c:\users\reube\appdata\local\programs\python\python38\lib\site-packages\streamlit\script_runner.py", line 333, in _run_script
@@ -59,7 +61,7 @@ def zoom(image,x1,x2,y1,y2):
     # File "D:\01 - Projects\Machine Learning\Tech-Meet-2021\Streamlit\app.py", line 51, in zoom
     res = cv2.resize(crop,(28,28), interpolation = cv2.INTER_CUBIC)
     #image = Image.open(img)
-    img_array = np.array(image)    
+    #img_array = np.array(image)    
     rows,cols, temp = img_array.shape
     if(0<=x1<=np.shape(img_array)[0] and 0<=x2<=np.shape(img_array)[0] and 0<=y1<=np.shape(img_array)[1] and 0<=y2<=np.shape(img_array)[1]):
         crop = img_array[y1:y2,x1:x2]
@@ -68,10 +70,11 @@ def zoom(image,x1,x2,y1,y2):
     else:
         print("enter x value less than {} and y value leass than {}".format(np.shape(img)[0],np.shape(img)[1]))
 
-def flip(image):
+def flip(img_array):
     #image = Image.open(img)
+    global isFlipped
     isFlipped = not isFlipped
-    img_array = np.array(image)    
+    #img_array = np.array(image)    
     rows,cols, temp = img_array.shape
     flip=cv2.flip(img_array,1)
     st.image(flip)
@@ -117,9 +120,17 @@ uploaded_file=Image.open("A.png")
 original_img_array = np.array(uploaded_file)
 st.image(original_img_array)
 modified_img_array = np.array(uploaded_file)
-rotating_degree, x, y, blur, x1, y1, x2, y2 = None 
-all_changes(modified_img_array,rotating_degree,x,y,blur,x1,y1,x2,y2,isFlipped)
-isFlipped = False
+rotating_degree = None 
+x= None 
+y= None
+blur= None 
+x1= None 
+y1= None 
+x2= None
+
+y2 = None 
+
+
 
 st.sidebar.header("Image Augmentation Options")
 #st.sidebar.subheader("Ishan Prayagi")
@@ -183,3 +194,6 @@ if(translater):
 # if(zoomer):
 #     for uploaded_file in uploaded_files:
 #         zoom(uploaded_file,x1,x2,y1,y2)
+Final_Image=st.button("Final Image")
+if Final_Image:
+    all_changes(modified_img_array,rotating_degree,x,y,blur,x1,y1,x2,y2,isFlipped)

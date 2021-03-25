@@ -12,7 +12,7 @@ To setup the model in your local environment please go through the following ste
 1. Make sure you have **Python 3.8** installed in your system. If not, install it from [here](https://www.python.org/downloads/) and add its path to the environment variables.
 > To check if the python is correctly setup in the enviroment run `python --version` or `python3 --version`. It should print the installed version of python in your system. 
 2. Run the following code to install Streamlit (It is an open source python library that we have used to integrate the model with UI): <br>
-`pip install streamlit`
+`pip install streamlit` <br>
 3.We have used the following open source libraries. So, if you don't have them installed you need to install them by running `pip install [library name]`:
 > pandas <br>
 > numpy <br>

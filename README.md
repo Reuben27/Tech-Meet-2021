@@ -14,14 +14,14 @@ To setup the model in your local environment please go through the following ste
 2. Run the following code to install Streamlit (It is an open source python library that we have used to integrate the model with UI): <br>
 `pip install streamlit`
 3.We have used the following open source libraries. So, if you don't have them installed you need to install them by running `pip install [library name]`:
-> pandas 
-> numpy 
-> matplotlib 
-> opencv_python
-> Pillow
-> tensorflow
-> keras 
-> skimage
+> pandas <br>
+> numpy <br>
+> matplotlib <br> 
+> opencv_python <br>
+> Pillow <br>
+> tensorflow <br>
+> keras <br>
+> skimage <br>
 4. Clone this [repository](https://github.com/Reuben27/Tech-Meet-2021) in your local system.
 5. Download the saved models for different types of split into validation sets from [here](https://drive.google.com/drive/folders/1UKzvVVbGQmNWUxUzGlzk0ABMG1Xbvmz6?usp=sharing) (Put all five directories in a folder `saves`).
 6. Move this `saves` folder in the root directory of the cloned repository in your system.
